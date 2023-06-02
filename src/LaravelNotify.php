@@ -8,6 +8,11 @@ use Mckenziearts\Notify\Storage\Session;
 
 final class LaravelNotify
 {
+    public const TYPE_INFO = 'info';
+    public const TYPE_SUCCESS = 'success';
+    public const TYPE_ERROR = 'error';
+    public const TYPE_WARNING = 'warning';
+
     protected Session $session;
 
     public function __construct(Session $session)
@@ -17,35 +22,35 @@ final class LaravelNotify
 
     public function info(string $message, string $title = null): self
     {
-        $this->flash($message, 'info', 'flaticon-exclamation-1', 'toast', $title);
+        $this->flash($message, static::TYPE_INFO, 'flaticon-exclamation-1', 'toast', $title);
 
         return $this;
     }
 
     public function success(string $message, string $title = null): self
     {
-        $this->flash($message, 'success', 'flaticon2-check-mark', 'toast', $title);
+        $this->flash($message, static::TYPE_SUCCESS, 'flaticon2-check-mark', 'toast', $title);
 
         return $this;
     }
 
     public function error(string $message, string $title = null): self
     {
-        $this->flash($message, 'error', 'flaticon2-delete', 'toast', $title);
+        $this->flash($message, static::TYPE_ERROR, 'flaticon2-delete', 'toast', $title);
 
         return $this;
     }
 
     public function warning(string $message, string $title = null): self
     {
-        $this->flash($message, 'warning', 'flaticon-warning-sign', 'toast', $title);
+        $this->flash($message, static::TYPE_WARNING, 'flaticon-warning-sign', 'toast', $title);
 
         return $this;
     }
 
     public function connect(string $type, string $title, string $message): self
     {
-        $icon = ($type === 'success') ? 'flaticon-like' : 'flaticon-cancel';
+        $icon = ($type === static::TYPE_SUCCESS) ? 'flaticon-like' : 'flaticon-cancel';
 
         $this->flash($message, $type, $icon, 'connect', $title);
 
@@ -54,7 +59,7 @@ final class LaravelNotify
 
     public function smiley(string $type, string $message): self
     {
-        $icon = ($type === 'success') ? '👍' : '🙅🏽‍♂';
+        $icon = ($type === static::TYPE_SUCCESS) ? '👍' : '🙅🏽‍♂';
 
         $this->flash($message, $type, $icon, 'smiley');
 
@@ -70,8 +75,8 @@ final class LaravelNotify
 
     public function drake(string $type): self
     {
-        $icon = ($type === 'success') ? 'flaticon2-check-mark' : 'flaticon2-cross';
-        $message = ($type === 'success') ? __('Success') : __('Try Again');
+        $icon = ($type === static::TYPE_SUCCESS) ? 'flaticon2-check-mark' : 'flaticon2-cross';
+        $message = ($type === static::TYPE_SUCCESS) ? __('Success') : __('Try Again');
 
         $this->flash($message, $type, $icon, 'drake');
 
@@ -93,10 +98,10 @@ final class LaravelNotify
      */
     public function preset(string $presetName, array $overrideValues = []): self
     {
-        $presetValues = config('notify.preset-messages.'.$presetName);
+        $presetValues = config('notify.preset-messages.' . $presetName);
 
-        if (! $presetValues) {
-            throw new MissingPresetNotificationException('A preset message does not exist with the name: '.$presetName);
+        if (!$presetValues) {
+            throw new MissingPresetNotificationException('A preset message does not exist with the name: ' . $presetName);
         }
 
         $this->flash(
